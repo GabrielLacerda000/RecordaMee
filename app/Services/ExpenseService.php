@@ -35,7 +35,7 @@ class ExpenseService {
         return $expense;
     }
     public function showExpense($id) {
-        $expense = Expense::findOrFail($id);
+        $expense = Expense::with('user')->findOrFail($id);
         if ($expense->user_id !== request()->user()->id) {
             abort(403, 'Acesso não autorizado à despesa.');
         }
