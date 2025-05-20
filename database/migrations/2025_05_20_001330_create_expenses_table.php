@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->foreignId('user_id')->constrained('users');
             $table->date('due_date')->index();
-            $table->foreignId('status_id')->constrained('status')->index();
-            $table->foreignId('recurrence_id')->constrained('recurrence');
+            $table->foreignId('status_id')->constrained('statuses')->index();
+            $table->foreignId('recurrence_id')->constrained('recurrences');
             $table->foreignId('category_id')->constrained('categories')->index();
             $table->decimal('amount', 15, 2);
             $table->date('payment_date')->nullable();
