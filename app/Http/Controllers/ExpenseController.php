@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use ExpenseService;
+use App\Services\ExpenseService as ServicesExpenseService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
     protected $expenseService;
-    public function __construct(ExpenseService $expenseService) {
+    public function __construct(ServicesExpenseService $expenseService) {
         $this->expenseService = $expenseService;
     }
 
