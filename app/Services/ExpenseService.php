@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Expense;
+use App\Models\Status;
 use Illuminate\Http\Request;
 
 class ExpenseService {
@@ -49,5 +50,21 @@ class ExpenseService {
         }
 
          return $expense->delete();
+    }
+    public function getExpensesSummary() {
+        $user = request()->user();
+
+        $statusPaid = Status::where('name', 'paid')->first();
+        $statusPending = Status::where('name', 'pending')->first();
+
+        $total = $user->expenses()->sum('amount');
+        $totalPaid = $statusPaid ? $user->expenses()->where('status_id', $statusPaid->id)->sum('amount') : 0;
+        $totalPending = $statusPending ? $user->expenses()->where('status_id', $statusPending->id)->sum('amount') : 0;
+
+        return [
+            'total' => $total,
+            'total_paid' => $totalPaid,
+            'total_pending' => $totalPending,
+        ];
     }
 }
