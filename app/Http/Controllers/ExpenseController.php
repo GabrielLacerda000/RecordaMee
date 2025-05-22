@@ -91,14 +91,4 @@ class ExpenseController extends Controller
             'data' => null
         ], 200);
     }
-
-    public function getSummary()
-    {
-        $summary = $this->expenseService->getExpensesSummary();
-        return response()->json([
-           'status' =>'success',
-           'message' => 'Resumo de despesas recuperado com sucesso',
-            'data' => $summary
-        ], 200);
-    }
 }

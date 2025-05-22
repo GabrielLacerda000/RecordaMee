@@ -24,16 +24,16 @@ class ExpenseService {
     }
     public function updateExpense($id, Request $request) {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'due_date' => 'required|date',
-            'status_id' => 'required|integer|exists:statuses,id',
+            'name' => 'sometimes|string|max:255',
+            'due_date' => 'sometimes|date',
+            'status_id' => 'sometimes|integer|exists:statuses,id',
             'recurrence_id' => 'nullable|integer|exists:recurrences,id',
-            'category_id' => 'required|integer|exists:categories,id',
-            'amount' => 'required|numeric|min:0',
+            'category_id' => 'sometimes|integer|exists:categories,id',
+            'amount' => 'sometimes|numeric|min:0',
             'payment_date' => 'nullable|date',
         ]);
         $expense = Expense::findOrFail($id);
-        $expense->update($validated);
+        $expense->fill($validated)->save();
         return $expense;
     }
     public function showExpense($id) {
