@@ -14,15 +14,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            StatusSeeder::class,
-            CategorySeeder::class,
-            RecurrenceSeeder::class,
+            // StatusSeeder::class,
+            // CategorySeeder::class,
+            // RecurrenceSeeder::class,
+            ExpenseSeeder::class,
         ]);
-        // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
     }
 }
