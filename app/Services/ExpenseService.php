@@ -41,7 +41,12 @@ class ExpenseService {
         return $expense;
     }
     public function showExpense($id) {
-        $expense = Expense::with('user')->findOrFail($id);
+        $expense = Expense::with([
+            'category:id,name',
+            'status:id,name',
+            'recurrence:id,name'
+        ])->findOrFail($id);
+        
         if ($expense->user_id !== request()->user()->id) {
             abort(403, 'Acesso não autorizado à despesa.');
         }
@@ -59,17 +64,24 @@ class ExpenseService {
     public function getExpensesSummary() {
         $user = request()->user();
 
-        $statusPaid = Status::where('name', 'paid')->first();
-        $statusPending = Status::where('name', 'pending')->first();
+        $statusPaid = Status::where('name', 'Paid')->first();
+        $statusPending = Status::where('name', 'Pending')->first();
 
-        $total = $user->expenses()->sum('amount');
-        $totalPaid = $statusPaid ? $user->expenses()->where('status_id', $statusPaid->id)->sum('amount') : 0;
-        $totalPending = $statusPending ? $user->expenses()->where('status_id', $statusPending->id)->sum('amount') : 0;
-
+        $total = $user->expenses()->pluck('amount')->reduce(fn($carry, $item) => bcadd($carry, $item, 2), '0.00');
+        
+        $totalPaid = $statusPaid
+            ? $user->expenses()->where('status_id', $statusPaid->id)->pluck('amount')->reduce(fn($carry, $item) => bcadd($carry, $item, 2), '0.00')
+            : '0.00';
+        
+        $totalPending = $statusPending
+            ? $user->expenses()->where('status_id', $statusPending->id)->pluck('amount')->reduce(fn($carry, $item) => bcadd($carry, $item, 2), '0.00')
+            : '0.00';
+        
         return [
             'total' => $total,
             'total_paid' => $totalPaid,
             'total_pending' => $totalPending,
         ];
+        
     }
 }

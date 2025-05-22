@@ -17,6 +17,8 @@ class Expense extends Model
         'amount',
         'payment_date',
     ];
+    protected $hidden = ['status_id', 'category_id', 'recurrence_id'];
+
     public function user()
     {
         return $this->belongsTo(User::class);

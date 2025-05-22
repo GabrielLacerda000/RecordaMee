@@ -15,11 +15,11 @@ class StatusSeeder extends Seeder
     public function run(): void
     {
         Status::create([
-            'name' => 'Paid',
+            'name' => 'paid',
         ]);
         
         Status::create([
-            'name' => 'Pending',
+            'name' => 'pending',
         ]);
     }
 }
