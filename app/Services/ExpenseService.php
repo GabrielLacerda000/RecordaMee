@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class ExpenseService {
     public function getExpenses() {
-        return request()->user()->expenses()->get();
+        return request()->user()->expenses()->with([
+            'category:id,name',
+            'status:id,name',
+            'recurrence:id,name'
+        ])->get();
     }
     public function createExpense(Request $request) {
         $validated = $request->validate([
