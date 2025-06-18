@@ -45,7 +45,9 @@ class ExpenseService {
             'category:id,name',
             'status:id,name',
             'recurrence:id,name'
-        ])->findOrFail($id);
+        ])->where('id', $id)->first();
+
+        if(!$expense) return null;
         
         if ($expense->user_id !== request()->user()->id) {
             abort(403, 'Acesso não autorizado à despesa.');
@@ -53,7 +55,9 @@ class ExpenseService {
         return $expense;
     }
     public function deleteExpense($id) {
-         $expense = Expense::findOrFail($id);
+         $expense = Expense::find($id);
+
+         if(!$expense) return null;
 
          if ($expense->user_id !== request()->user()->id) {
             abort(403, 'Acesso não autorizado à despesa.');
