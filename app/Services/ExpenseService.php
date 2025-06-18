@@ -36,7 +36,11 @@ class ExpenseService {
             'amount' => 'sometimes|numeric|min:0',
             'payment_date' => 'nullable|date',
         ]);
-        $expense = Expense::findOrFail($id);
+
+        $expense = Expense::find($id);
+
+        if(!$expense) return null;
+
         $expense->fill($validated)->save();
         return $expense;
     }
