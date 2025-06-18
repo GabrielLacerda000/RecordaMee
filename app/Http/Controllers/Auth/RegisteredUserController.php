@@ -35,10 +35,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        // Gera um token Sanctum para o usuário (stateless)
         $token = $user->createToken('api-token')->plainTextToken;
 
-        // Retorna o usuário + token (HTTP 201 - Created)
         return response()->json([
             'user' => $user,
             'token' => $token,
