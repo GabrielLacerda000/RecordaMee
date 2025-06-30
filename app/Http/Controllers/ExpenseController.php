@@ -17,6 +17,14 @@ class ExpenseController extends Controller
     {
         $expenses = $this->expenseService->getExpenses();
 
+        if(!$expenses) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Despesas não encontradas',
+                'data' => null
+            ], 404);
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'Despesas recuperadas com sucesso',
@@ -27,6 +35,14 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         $expense = $this->expenseService->createExpense($request);
+
+        if(!$expense) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erro ao criar despesa',
+                'data' => null
+            ], 404);
+        }
         
         return response()->json([
             'status' => 'success',
