@@ -25,11 +25,15 @@ class AuthenticatedSessionController extends Controller
     }
 
     $user = Auth::user();
-    $token = $user->createToken('api-token')->plainTextToken;
+    $token = $user->createToken('api-token',  ['*'], now()->addWeek())->plainTextToken;
 
     return response()->json([
-        'user' => $user,
-        'token' => $token,
+        'status' => 'success',
+         'message' => 'Usuario logado com sucesso',
+         'data' => [
+             'user' => $user,
+             'token' => $token
+         ]
     ]);
 }
 
