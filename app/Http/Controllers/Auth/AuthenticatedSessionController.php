@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Handle an incoming authentication request.
-     */
     public function store(Request $request)
 {
     $request->validate([
@@ -36,14 +33,32 @@ class AuthenticatedSessionController extends Controller
          ]
     ]);
 }
-
-    /**
-     * Destroy an authenticated session.
-     */
     public function destroy(Request $request)
 {
-    $request->user()->currentAccessToken()->delete();
+    $user = $request->user();
 
-    return response()->json(['message' => 'Logout realizado']);
+    if (!$user) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Usuário não autenticado.',
+            'data' => null
+        ], 401);
+    }
+
+    $token = $user->currentAccessToken();
+
+    if (!$token) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Token de acesso não encontrado ou já revogado.',
+            'data' => null
+        ], 400);
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Logout realizado com sucesso',
+        'data' => null
+    ], 200);
 }
 }
