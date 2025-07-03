@@ -35,11 +35,13 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
 
-    
-    
     Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/user', function (Request $request) {
-            return $request->user();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Usuario logado com sucesso',
+                'data' => $request->user()
+            ]);
         });
         
         Route::get('/expenses', [ExpenseController::class, 'index']);

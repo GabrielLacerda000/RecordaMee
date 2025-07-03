@@ -87,8 +87,8 @@ class ExpenseService {
         
         return [
             'total' => $total,
-            'total_paid' => $totalPaid,
-            'total_pending' => $totalPending,
+            'totalPaid' => $totalPaid,
+            'totalPending' => $totalPending,
         ];
         
     }

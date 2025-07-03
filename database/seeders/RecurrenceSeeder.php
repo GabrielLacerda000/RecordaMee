@@ -13,16 +13,22 @@ class RecurrenceSeeder extends Seeder
     public function run(): void
     {
         Recurrence::create([
-            'name' => 'Monthly',
+            'name' => 'daily',
         ]);
         Recurrence::create([
-            'name' => 'Bianual',
+            'name' => 'weekly',
+        ]);
+        Recurrence::create([
+            'name' => 'monthly',
+        ]);
+        Recurrence::create([
+            'name' => 'bianual',
         ]);
         Recurrence::create([
             'name' => 'semester',
         ]);
         Recurrence::create([
-            'name' => 'Yearly',
+            'name' => 'yearly',
         ]);
     }
 }

@@ -21,5 +21,9 @@ class StatusSeeder extends Seeder
         Status::create([
             'name' => 'pending',
         ]);
+
+        Status::create([
+            'name' => 'overdue',
+        ]);
     }
 }
