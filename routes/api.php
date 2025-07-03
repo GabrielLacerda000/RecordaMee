@@ -35,23 +35,23 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
     ->middleware(['auth', 'throttle:6,1'])
     ->name('verification.send');
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth:sanctum')
-    ->name('logout');
-
-
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-
-    Route::get('/expenses', [ExpenseController::class, 'index']);
-    Route::post('/expenses/create', [ExpenseController::class, 'store']);
-    Route::get('/expenses/show/{id}', [ExpenseController::class, 'show']);
-    Route::put('/expenses/update/{id}', [ExpenseController::class, 'update']);
-    Route::delete('/expenses/delete/{id}', [ExpenseController::class, 'destroy']);
-
-    Route::get('/expenses/summary', [ExpenseSummaryController::class, 'index']);
+    
+    
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
+        
+        Route::get('/expenses', [ExpenseController::class, 'index']);
+        Route::post('/expenses/create', [ExpenseController::class, 'store']);
+        Route::get('/expenses/show/{id}', [ExpenseController::class, 'show']);
+        Route::put('/expenses/update/{id}', [ExpenseController::class, 'update']);
+        Route::delete('/expenses/delete/{id}', [ExpenseController::class, 'destroy']);
+        
+        Route::get('/expenses/summary', [ExpenseSummaryController::class, 'index']);
+        
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
 });
 
 
