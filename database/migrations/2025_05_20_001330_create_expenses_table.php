@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 255);
             $table->foreignId('user_id')->constrained('users');
             $table->date('due_date')->index();
             $table->foreignId('status_id')->constrained('statuses')->index();
@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained('categories')->index();
             $table->decimal('amount', 15, 2);
             $table->date('payment_date')->nullable();
+            $table->boolean('isPaid')->default(false);
             $table->timestamps();
         });
     }

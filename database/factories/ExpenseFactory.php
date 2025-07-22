@@ -20,6 +20,8 @@ class ExpenseFactory extends Factory
      */
     public function definition(): array
     {
+        $paymentDate = $this->faker->optional()->dateTimeThisYear?->format('Y-m-d');
+
         return [
             'name' => $this->faker->words(3, true),
             'due_date' => $this->faker->dateTimeThisYear->format('Y-m-d'),
@@ -27,8 +29,9 @@ class ExpenseFactory extends Factory
             'recurrence_id' => rand(1,4),
             'category_id' => rand(1,8),
             'amount' => $this->faker->randomFloat(2, 10, 1000),
-            'payment_date' => $this->faker->optional()->dateTimeThisYear?->format('Y-m-d'),
+            'payment_date' => $paymentDate,
             'user_id' => User::factory(),
+            'isPaid' => $paymentDate !== null,
         ];
     }
 }

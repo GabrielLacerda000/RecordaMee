@@ -13,6 +13,9 @@ class RecurrenceSeeder extends Seeder
     public function run(): void
     {
         Recurrence::create([
+            'name' => 'unique',
+        ]);
+        Recurrence::create([
             'name' => 'daily',
         ]);
         Recurrence::create([

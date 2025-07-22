@@ -13,19 +13,23 @@ class ExpenseService {
             'recurrence:id,name'
         ])->get();
     }
-    public function createExpense(Request $request) {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'due_date' => 'required|date',
-            'status_id' => 'required|integer|exists:statuses,id',
-            'recurrence_id' => 'nullable|integer|exists:recurrences,id',
-            'category_id' => 'required|integer|exists:categories,id',
-            'amount' => 'required|numeric|min:0',
-            'payment_date' => 'nullable|date',
-        ]);
 
-        return $request->user()->expenses()->create($validated);
-    }
+    public function createExpense(Request $request) {
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'due_date' => 'required|date',
+        'status_id' => 'required|integer|exists:statuses,id',
+        'recurrence_id' => 'nullable|integer|exists:recurrences,id',
+        'category_id' => 'required|integer|exists:categories,id',
+        'amount' => 'required|numeric|min:0',
+        'payment_date' => 'nullable|date',
+    ]);
+
+    $expense = $request->user()->expenses()->create($validated);
+
+    return $expense->load(['category:id,name', 'status:id,name', 'recurrence:id,name']);
+}
+
     public function updateExpense($id, Request $request) {
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
@@ -35,6 +39,7 @@ class ExpenseService {
             'category_id' => 'sometimes|integer|exists:categories,id',
             'amount' => 'sometimes|numeric|min:0',
             'payment_date' => 'nullable|date',
+            'isPaid' => 'sometimes|boolean',
         ]);
 
         $expense = Expense::find($id);
@@ -44,6 +49,7 @@ class ExpenseService {
         $expense->fill($validated)->save();
         return $expense;
     }
+
     public function showExpense($id) {
         $expense = Expense::with([
             'category:id,name',
@@ -58,6 +64,7 @@ class ExpenseService {
         }
         return $expense;
     }
+
     public function deleteExpense($id) {
          $expense = Expense::find($id);
 
@@ -69,6 +76,7 @@ class ExpenseService {
 
          return $expense->delete();
     }
+
     public function getExpensesSummary() {
         $user = request()->user();
 
