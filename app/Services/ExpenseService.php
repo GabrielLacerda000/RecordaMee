@@ -80,8 +80,8 @@ class ExpenseService {
     public function getExpensesSummary() {
         $user = request()->user();
 
-        $statusPaid = Status::where('name', 'Paid')->first();
-        $statusPending = Status::where('name', 'Pending')->first();
+        $statusPaid = Status::where('name', 'paid')->first();
+        $statusPending = Status::where('name', 'pending')->first();
 
         $total = $user->expenses()->pluck('amount')->reduce(fn($carry, $item) => bcadd($carry, $item, 2), '0.00');
         
