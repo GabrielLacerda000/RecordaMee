@@ -82,6 +82,7 @@ class ExpenseService {
 
         $statusPaid = Status::where('name', 'paid')->first();
         $statusPending = Status::where('name', 'pending')->first();
+        $statusOverdue = Status::where('name', 'overdue')->first();
 
         $total = $user->expenses()->pluck('amount')->reduce(fn($carry, $item) => bcadd($carry, $item, 2), '0.00');
         
@@ -92,11 +93,16 @@ class ExpenseService {
         $totalPending = $statusPending
             ? $user->expenses()->where('status_id', $statusPending->id)->pluck('amount')->reduce(fn($carry, $item) => bcadd($carry, $item, 2), '0.00')
             : '0.00';
+
+        $totalOverdue = $statusPending
+            ? $user->expenses()->where('status_id', $statusOverdue->id)->pluck('amount')->reduce(fn($carry, $item) => bcadd($carry, $item, 2), '0.00')
+            : '0.00';
         
         return [
             'total' => $total,
             'totalPaid' => $totalPaid,
             'totalPending' => $totalPending,
+            'totalOverdue' => $totalOverdue,
         ];
         
     }
