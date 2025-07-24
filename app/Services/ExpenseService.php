@@ -46,9 +46,12 @@ class ExpenseService {
 
         if(!$expense) return null;
 
+        $statusPaid = Status::where('name', 'paid')->first();
+        $originalStatusId = $expense->getOriginal('status_id');
+
         $expense->fill($validated)->save();
 
-        if ($expense->status->name === 'paid') {
+        if ($expense->status_id === $statusPaid->id && $originalStatusId !== $statusPaid->id) {
             ExpensePaid::dispatch($expense);
         }
 

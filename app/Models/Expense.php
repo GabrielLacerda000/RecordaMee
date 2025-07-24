@@ -16,6 +16,7 @@ class Expense extends Model
         'category_id',
         'amount',
         'payment_date',
+        'user_id',
     ];
     protected $hidden = ['status_id', 'category_id', 'recurrence_id'];
 

@@ -19,10 +19,7 @@ class CreateNextRecurringExpense implements ShouldQueue
     {
         $expense = $event->expense;
         
-        $status =  Status::where('name', 'pending')->first()->id;
-        $recurrenceUnique = Recurrence::where('name', 'unique')->first()->id;
-
-        if ($expense->recurrence_id !== $recurrenceUnique) {
+        if ($expense->recurrence_id) {
             $newDueDate = Carbon::parse($expense->due_date)->addMonth();
 
             Expense::create([
