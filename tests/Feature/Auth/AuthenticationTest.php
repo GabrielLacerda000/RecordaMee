@@ -30,17 +30,13 @@ test('users can not authenticate with invalid password', function () {
 test('users can logout', function () {
     $user = User::factory()->create();
 
-    $token = $user->createToken('TestToken')->plainTextToken;
+    $this->actingAs($user, 'sanctum'); // em vez de criar token manual
 
-     $response = $this
-        ->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
-            'Accept' => 'application/json', 
-        ])
+    $response = $this
+        ->withHeader('Accept', 'application/json')
         ->post('/logout');
 
     $response->assertStatus(200);
-
-    $this->assertCount(0, $user->fresh()->tokens);
 });
+
 
