@@ -20,7 +20,35 @@ class CreateNextRecurringExpense implements ShouldQueue
         $expense = $event->expense;
         
         if ($expense->recurrence_id) {
-            $newDueDate = Carbon::parse($expense->due_date)->addMonth();
+            $recurrence = Recurrence::find($expense->recurrence_id);
+            $newDueDate = Carbon::parse($expense->due_date);
+
+            switch (strtolower($recurrence->name)) {
+                case 'daily':
+                    $newDueDate->addDay();
+                    break;
+                case 'weekly':
+                    $newDueDate->addWeek();
+                    break;
+                case 'monthly':
+                    $newDueDate->addMonth();
+                    break;
+                case 'bianual':
+                    $newDueDate->addYear();
+                    break;
+                case 'bianual':
+                    $newDueDate->addYear();
+                    break;
+                case 'semester':
+                    $newDueDate->addYear();
+                    break;
+                case 'yearly':
+                    $newDueDate->addYear();
+                    break;
+                default:
+                    $newDueDate->addMonth();
+                    break;
+            }
 
             Expense::create([
                 'name' => $expense->name,
