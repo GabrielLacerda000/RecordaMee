@@ -16,7 +16,7 @@ class RecurrenceExpensesController extends Controller
 
     public function index()
     {
-        $recurrencyExpenses = $this->expenseService->getRecurrencyExpenses();
+        $recurrencyExpenses = $this->expenseService->getNextRecurrencyExpenses();
 
         if(!$recurrencyExpenses) {
             return response()->json([

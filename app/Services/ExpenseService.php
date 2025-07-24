@@ -28,6 +28,13 @@ class ExpenseService {
 
     $expense = $request->user()->expenses()->create($validated);
 
+    $statusPaid = Status::where('name', 'paid')->first();
+    $originalStatusId = $expense->getOriginal('status_id');
+
+    if ($expense->status_id === $statusPaid->id && $originalStatusId !== $statusPaid->id) {
+        ExpensePaid::dispatch($expense);
+    }
+
     return $expense->load(['category:id,name', 'status:id,name', 'recurrence:id,name']);
 }
 
@@ -116,11 +123,26 @@ class ExpenseService {
         
     }
 
-    public function getRecurrencyExpenses() {
-        $recurencyUnique = Recurrence::where('name', 'unique')->pluck('id');
+    public function getNextRecurrencyExpenses() {
+        $user = request()->user();
+        $statusPaid = Status::where('name', 'paid')->first();
+        $recurrenceUnique = Recurrence::where('name', 'unique')->first();
 
-        if ($recurencyUnique->isEmpty()) return null;
-        
-        return Expense::where('recurrence_id', '!=', $recurencyUnique)->get();
+        if (!$statusPaid || !$recurrenceUnique) {
+            return null; 
+        }
+
+        $nextExpenses = $user->expenses()
+            ->where('recurrence_id', '!=', $recurrenceUnique->id)
+            ->where('status_id', '!=', $statusPaid->id)
+            ->where('due_date', '>=', now()->toDateString())
+            ->orderBy('due_date')
+            ->get()
+            ->groupBy('recurrence_id')
+            ->map(function ($expenses) {
+                return $expenses->first();
+            });
+
+        return $nextExpenses->values();
     }
 }
