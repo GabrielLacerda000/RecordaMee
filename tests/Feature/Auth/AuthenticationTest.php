@@ -2,6 +2,8 @@
 
 use App\Models\User;
 
+use Laravel\Sanctum\Sanctum;
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
@@ -28,8 +30,17 @@ test('users can not authenticate with invalid password', function () {
 test('users can logout', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->post('/logout');
+    $token = $user->createToken('TestToken')->plainTextToken;
 
-    $this->assertGuest();
-    $response->assertNoContent();
+     $response = $this
+        ->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json', 
+        ])
+        ->post('/logout');
+
+    $response->assertStatus(200);
+
+    $this->assertCount(0, $user->fresh()->tokens);
 });
+

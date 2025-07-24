@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function store(Request $request)
-{
+    public function store(Request $request) {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required',
@@ -33,8 +32,8 @@ class AuthenticatedSessionController extends Controller
          ]
     ]);
 }
-    public function destroy(Request $request)
-{
+
+    public function destroy(Request $request) {
     $user = $request->user();
 
     if (!$user) {
@@ -55,10 +54,13 @@ class AuthenticatedSessionController extends Controller
         ], 400);
     }
 
+    $token->delete();
+
     return response()->json([
         'status' => 'success',
         'message' => 'Logout realizado com sucesso',
         'data' => null
     ], 200);
 }
+
 }
