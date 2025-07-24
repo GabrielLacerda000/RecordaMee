@@ -117,10 +117,10 @@ class ExpenseService {
     }
 
     public function getRecurrencyExpenses() {
-        $recurencyUnique = Recurrence::where('name', 'unique')->pluck('recurrence_id');
+        $recurencyUnique = Recurrence::where('name', 'unique')->pluck('id');
 
         if ($recurencyUnique->isEmpty()) return null;
         
-        return Expense::where('recurrence_id', '!=', recurencyUnique)->get();
+        return Expense::where('recurrence_id', '!=', $recurencyUnique)->get();
     }
 }
