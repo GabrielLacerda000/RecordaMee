@@ -30,8 +30,9 @@ class ExpenseService {
     $expense = $request->user()->expenses()->create($validated);
 
     $statusPaid = Status::where('name', 'paid')->first();
+    $recurrenceUnique = Recurrence::where('name', 'unique')->first();
 
-    if ($expense->status_id === $statusPaid->id) {
+    if ($expense->status_id === $statusPaid->id && $expense->recurrence_id !== $recurrenceUnique->id) {
         ExpensePaid::dispatch($expense);
     }
 
