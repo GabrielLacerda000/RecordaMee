@@ -47,6 +47,11 @@ class ExpenseService {
         if(!$expense) return null;
 
         $expense->fill($validated)->save();
+
+        if ($expense->status->name === 'paid') {
+            ExpensePaid::dispatch($expense);
+        }
+
         return $expense;
     }
 
