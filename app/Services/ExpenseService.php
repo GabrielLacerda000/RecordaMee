@@ -5,6 +5,7 @@ use App\Models\Expense;
 use App\Models\Recurrence;
 use App\Models\Status;
 use Illuminate\Http\Request;
+use App\Events\ExpensePaid;
 
 class ExpenseService {
     public function getExpenses() {
@@ -29,9 +30,8 @@ class ExpenseService {
     $expense = $request->user()->expenses()->create($validated);
 
     $statusPaid = Status::where('name', 'paid')->first();
-    $originalStatusId = $expense->getOriginal('status_id');
 
-    if ($expense->status_id === $statusPaid->id && $originalStatusId !== $statusPaid->id) {
+    if ($expense->status_id === $statusPaid->id) {
         ExpensePaid::dispatch($expense);
     }
 
