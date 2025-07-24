@@ -30,14 +30,10 @@ class RecurrenceSeeder extends Seeder
         ]);
         Recurrence::create([
             id => 5,
-            'name' => 'bianual',
-        ]);
-        Recurrence::create([
-            id => 6,
             'name' => 'semester',
         ]);
         Recurrence::create([
-            id => 7,
+            id => 6,
             'name' => 'yearly',
         ]);
     }

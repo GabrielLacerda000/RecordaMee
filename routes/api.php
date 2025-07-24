@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\RecurrenceExpensesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/expenses/delete/{id}', [ExpenseController::class, 'destroy']);
     
     Route::get('/expenses/summary', [ExpenseSummaryController::class, 'index']);
+
+    Route::get('/expenses/recurrences', [RecurrenceExpensesController::class, 'index']);
     
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Expense;
+use App\Models\Recurrence;
 use App\Models\Status;
 use Illuminate\Http\Request;
 
@@ -113,5 +114,13 @@ class ExpenseService {
             'totalOverdue' => $totalOverdue,
         ];
         
+    }
+
+    public function getRecurrencyExpenses() {
+        $recurencyUnique = Recurrence::where('name', 'unique')->pluck('recurrence_id');
+
+        if ($recurencyUnique->isEmpty()) return null;
+        
+        return Expense::where('recurrence_id', '!=', recurencyUnique)->get();
     }
 }

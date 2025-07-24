@@ -33,14 +33,8 @@ class CreateNextRecurringExpense implements ShouldQueue
                 case 'monthly':
                     $newDueDate->addMonth();
                     break;
-                case 'bianual':
-                    $newDueDate->addYear();
-                    break;
-                case 'bianual':
-                    $newDueDate->addYear();
-                    break;
                 case 'semester':
-                    $newDueDate->addYear();
+                    $newDueDate->addMonths(6);
                     break;
                 case 'yearly':
                     $newDueDate->addYear();
