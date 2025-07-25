@@ -9,12 +9,22 @@ use App\Events\ExpensePaid;
 
 class ExpenseService {
     public function getExpenses() {
-        return request()->user()->expenses()->with([
+        $query = request()->user()->expenses()->with([
             'category:id,name',
             'status:id,name',
             'recurrence:id,name',
             'parent'
-        ])->get();
+        ]);
+
+        if (request()->has('month')) {
+            $query->whereMonth('due_date', request()->input('month'));
+        }
+
+        if (request()->has('year')) {
+            $query->whereYear('due_date', request()->input('year'));
+        }
+
+        return $query->get();
     }
 
     public function createExpense(Request $request) {
