@@ -37,7 +37,6 @@ class ExpenseService {
         } else {
             $validated['status_id'] = $statusPending->id;
         }
-        unset($validated['isPaid']);
     }
 
     $expense = $request->user()->expenses()->create($validated);
@@ -76,7 +75,6 @@ class ExpenseService {
             } else {
                 $validated['status_id'] = $statusPending->id;
             }
-            unset($validated['isPaid']);
         }
 
         $originalStatusId = $expense->getOriginal('status_id');
