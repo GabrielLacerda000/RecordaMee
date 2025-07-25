@@ -162,7 +162,7 @@ class ExpenseService {
             ->where('due_date', '>=', now()->toDateString())
             ->orderBy('due_date')
             ->get()
-            ->groupBy('recurrence_id')
+            ->groupBy('name')
             ->map(function ($expenses) {
                 return $expenses->first();
             });
