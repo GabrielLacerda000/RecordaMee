@@ -20,16 +20,28 @@ class ExpenseService {
     $validated = $request->validate([
         'name' => 'required|string|max:255',
         'due_date' => 'required|date',
-        'status_id' => 'required|integer|exists:statuses,id',
+        'status_id' => 'sometimes|integer|exists:statuses,id',
         'recurrence_id' => 'nullable|integer|exists:recurrences,id',
         'category_id' => 'required|integer|exists:categories,id',
         'amount' => 'required|numeric|min:0',
         'payment_date' => 'nullable|date',
+        'isPaid' => 'sometimes|boolean',
     ]);
+
+    $statusPaid = Status::where('name', 'paid')->first();
+    $statusPending = Status::where('name', 'pending')->first();
+
+    if (isset($validated['isPaid'])) {
+        if ($validated['isPaid']) {
+            $validated['status_id'] = $statusPaid->id;
+        } else {
+            $validated['status_id'] = $statusPending->id;
+        }
+        unset($validated['isPaid']);
+    }
 
     $expense = $request->user()->expenses()->create($validated);
 
-    $statusPaid = Status::where('name', 'paid')->first();
     $recurrenceUnique = Recurrence::where('name', 'unique')->first();
 
     if ($expense->status_id === $statusPaid->id && $expense->recurrence_id !== $recurrenceUnique->id) {
@@ -56,6 +68,17 @@ class ExpenseService {
         if(!$expense) return null;
 
         $statusPaid = Status::where('name', 'paid')->first();
+        $statusPending = Status::where('name', 'pending')->first();
+
+        if (isset($validated['isPaid'])) {
+            if ($validated['isPaid']) {
+                $validated['status_id'] = $statusPaid->id;
+            } else {
+                $validated['status_id'] = $statusPending->id;
+            }
+            unset($validated['isPaid']);
+        }
+
         $originalStatusId = $expense->getOriginal('status_id');
 
         $expense->fill($validated)->save();
