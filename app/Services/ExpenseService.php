@@ -93,7 +93,8 @@ class ExpenseService {
         $expense = Expense::with([
             'category:id,name',
             'status:id,name',
-            'recurrence:id,name'
+            'recurrence:id,name',
+            'parent'
         ])->where('id', $id)->first();
 
         if(!$expense) return null;
