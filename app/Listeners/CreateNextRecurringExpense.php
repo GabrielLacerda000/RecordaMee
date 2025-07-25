@@ -17,11 +17,21 @@ class CreateNextRecurringExpense implements ShouldQueue
 
     public function handle(ExpensePaid $event): void
     {
-        $expense = $event->expense;
-        
-        if ($expense->recurrence_id) {
-            $recurrence = Recurrence::find($expense->recurrence_id);
-            $newDueDate = Carbon::parse($expense->due_date);
+        $paidExpense = $event->expense;
+        $uniqueRecurrence = Recurrence::where('name', 'unique')->first();
+
+        if ($paidExpense->recurrence_id) {
+            $recurrence = Recurrence::find($paidExpense->recurrence_id);
+            
+            if (!$recurrence) {
+                return;
+            }
+
+            if (strtolower($recurrence->name) === 'unique') {
+                return;
+            }
+
+            $newDueDate = Carbon::parse($paidExpense->due_date);
 
             switch (strtolower($recurrence->name)) {
                 case 'daily':
@@ -45,13 +55,14 @@ class CreateNextRecurringExpense implements ShouldQueue
             }
 
             Expense::create([
-                'name' => $expense->name,
+                'name' => $paidExpense->name,
                 'due_date' => $newDueDate,
                 'status_id' => Status::where('name', 'pending')->first()->id,
-                'recurrence_id' => $expense->recurrence_id,
-                'category_id' => $expense->category_id,
-                'amount' => $expense->amount,
-                'user_id' => $expense->user_id,
+                'recurrence_id' => $paidExpense->recurrence_id,
+                'category_id' => $paidExpense->category_id,
+                'amount' => $paidExpense->amount,
+                'user_id' => $paidExpense->user_id,
+                'parent_expense_id' => $paidExpense->id,
             ]);
         }
     }

@@ -147,7 +147,7 @@ class ExpenseService {
         
     }
 
-    public function getNextRecurrencyExpenses() {
+    public function getUpcomingExpenses() {
         $user = request()->user();
         $statusPaid = Status::where('name', 'paid')->first();
         $recurrenceUnique = Recurrence::where('name', 'unique')->first();

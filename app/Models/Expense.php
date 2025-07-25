@@ -24,16 +24,29 @@ class Expense extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function status()
     {
         return $this->belongsTo(Status::class);
     }
+
     public function recurrence()
     {
         return $this->belongsTo(Recurrence::class);
     }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    
+    public function parent()
+    {
+        return $this->belongsTo(Expense::class, 'parent_expense_id');
+    }
+       
+    public function children()
+    {
+        return $this->hasMany(Expense::class, 'parent_expense_id');
     }
 }
