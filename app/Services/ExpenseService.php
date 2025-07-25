@@ -47,7 +47,7 @@ class ExpenseService {
         ExpensePaid::dispatch($expense);
     }
 
-    return $expense->load(['category:id,name', 'status:id,name', 'recurrence:id,name']);
+    return $expense->load(['category:id,name', 'status:id,name', 'recurrence:id,name', 'parent']);
 }
 
     public function updateExpense($id, Request $request) {
@@ -85,7 +85,7 @@ class ExpenseService {
             ExpensePaid::dispatch($expense);
         }
 
-        return $expense;
+        return $expense->load(['category:id,name', 'status:id,name', 'recurrence:id,name', 'parent']);
     }
 
     public function showExpense($id) {
