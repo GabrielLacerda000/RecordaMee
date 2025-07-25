@@ -12,7 +12,8 @@ class ExpenseService {
         return request()->user()->expenses()->with([
             'category:id,name',
             'status:id,name',
-            'recurrence:id,name'
+            'recurrence:id,name',
+            'parent'
         ])->get();
     }
 
