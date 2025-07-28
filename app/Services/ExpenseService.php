@@ -167,6 +167,7 @@ class ExpenseService {
         }
 
         $nextExpenses = $user->expenses()
+            ->with(['category:id,name', 'status:id,name', 'recurrence:id,name', 'parent'])
             ->where('recurrence_id', '!=', $recurrenceUnique->id)
             ->where('status_id', '!=', $statusPaid->id)
             ->where('due_date', '>=', now()->toDateString())
