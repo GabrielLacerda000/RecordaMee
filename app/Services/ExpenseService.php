@@ -24,7 +24,7 @@ class ExpenseService {
             $query->whereYear('due_date', request()->input('year'));
         }
 
-        return $query->get();
+        return $query->paginate(request()->input('per_page', 10));
     }
 
     public function createExpense(Request $request) {
