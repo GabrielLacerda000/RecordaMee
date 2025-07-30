@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ExpenseCollection;
 use App\Services\ExpenseService as ServicesExpenseService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class ExpenseController extends Controller
     {
         $expenses = $this->expenseService->getExpenses();
 
-        if(!$expenses) {
+        if ($expenses->isEmpty()) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Despesas não encontradas',
@@ -25,11 +26,7 @@ class ExpenseController extends Controller
             ], 404);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Despesas recuperadas com sucesso',
-            'data' => $expenses
-        ], 200);
+        return new ExpenseCollection($expenses);
     }
 
     public function store(Request $request)
